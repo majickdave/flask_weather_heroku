@@ -23,7 +23,14 @@ def query_api():
         print(exc)
         data = None
     return data
-    
+
+@app.route('/')
+def hello():
+    greet = '<h1>Welcome to the topping weather app</h1>'
+    content = '<p>Only weather for 8508 topping road</p>'
+    link = '<p><a href="/weather">Click me!</a></p>'
+    return greet + link
+
 @app.route('/weather')
 def result():
     """
