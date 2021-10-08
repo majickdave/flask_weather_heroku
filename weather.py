@@ -6,19 +6,31 @@
 import requests
 import json
 from flask import Flask
+from datetime import timezone
+import datetime
+import pytz
+
 app = Flask(__name__)
 
 # this is not a real key
 API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 
 # get weather by U.S. zip code
-API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat=39.40538934466007&lon=-76.70943148008318&exclude=(hourly,%20minutely)&units=imperial&appid={}')
+API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat=39.40538934466007&lon=-76.70943148008318&exclude=[current, minutely, hourly, alerts]&units=imperial&appid={}')
+HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&appid={}')
 
-def query_api():
+
+
+def query_api(days):
     """submit the API query using variables for zip and API_KEY"""
+
+    dt = datetime.datetime.now(pytz.timezone('EST')) + datetime.timedelta(days=-1 * int(days))
+    utc_time = dt.replace(tzinfo=pytz.timezone('EST'))
+    date = round(utc_time.timestamp())
+    
     try:
-        # print(API_URL.format(zip, API_KEY))
-        data = requests.get(API_URL.format(API_KEY)).json()
+        print(HISTORY_API_URL.format(date, API_KEY))
+        data = requests.get(HISTORY_API_URL.format(date, API_KEY)).json()
     except Exception as exc:
         print(exc)
         data = None
@@ -29,17 +41,18 @@ def hello():
     greet = '<h1>Welcome to the topping weather app</h1>'
     content = '<p>Only weather for 8508 topping road</p>'
     link = '<p><a href="/weather">Click me!</a></p>'
-    return greet + link
+    return greet + content + link
 
-@app.route('/weather')
-def result():
+@app.route('/weather/<days>')
+def result(days):
     """
     options for exclude:
     [current, minutely, hourly, daily, alerts]
     http://127.0.0.1:5000/weather/39.40538934466007:-76.70943148008318:(hourly,%20minutely)
+    https://api.openweathermap.org/data/2.5/onecall?lat=39.40538934466007&lon=-76.70943148008318&exclude=[hourly,minutely]&units=imperial&appid=17afee29d93a1db02dda0f1817e0aca1
     """
     # get the json file from the OpenWeather API
-    resp = query_api()
+    resp = query_api(days)
     # construct a string using the json data items for temp and
     # description
     try:
