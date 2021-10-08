@@ -40,8 +40,10 @@ def query_api(days):
 def hello():
     greet = '<h1>Welcome to the topping weather app</h1>'
     content = '<p>Only weather for 8508 topping road</p>'
-    link = '<p><a href="/weather">Click me!</a></p>'
-    return greet + content + link
+    link1 = "<p><a href='/weather/1'>Yesterday's weather!</a></p>"
+    link2 = "<p><a href='/weather/2'>2 days ago weather!</a></p>"
+    link3 = "<p><a href='/weather/3'>3 days ago weather!</a></p>"
+    return greet + content + link1 + link2 + link3
 
 @app.route('/weather/<days>')
 def result(days):
