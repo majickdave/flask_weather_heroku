@@ -1,20 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
-    {% for post in posts %}
-        <a href="{{ url_for('post', post_id=post['id']) }}">
-            <h2>{{ post['title'] }}</h2>
-        </a>
-        <span class="badge badge-primary">{{ post['created'] }}</span>
-        <a href="{{ url_for('edit', id=post['id']) }}">
-            <span class="badge badge-warning">Edit</span>
-            <form action="{{ url_for('delete', id=post['id']) }}" method="POST">
-                <input type="submit" value="Delete Post"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Are you sure you want to delete this post?')">
-            </form>
-        </a>
-        <hr>
+
+<h1>Historical Weather 🌦</h1>
+<subtitle>for 8508 Topping Road</subtitle>
+<p><input onClick="window.location.href='/weather/21208'" type="submit" Value="Weather for 21208"></p>
+<p>Click for any day weather</p>
+
+<!-- pairs is a list that must be sent here by a route function
+     The list will contain 45 pairs: a presidency number, and a
+     president's name -->
+
+    <ul>
+    {% for day in days %}
+    </p>
+        {% if day < 2 %}
+            <li><a href='/weather/historical/{{ day }}'>{{ day }} day ago: </a></li>
+        {% else %}
+            <li><a href='/weather/historical/{{ day }}'>{{ day }} days ago: </a></li>
+        {% endif %}
     {% endfor %}
+    </ul>
+
 {% endblock %}
