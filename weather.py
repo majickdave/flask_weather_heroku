@@ -6,6 +6,7 @@
 import requests
 import json
 from flask import Flask
+from flask import Flask, render_template
 from modules import *
 
 app = Flask(__name__)
@@ -18,6 +19,9 @@ ZIPCODE_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 
+@app.route('/')
+def index():
+    return render_template('index.html', days=list(range(1,8)), the_title="Dave's weather app")
 
 def query_api_historical(days):
     """submit the API query using variables for zip and API_KEY"""
@@ -44,15 +48,9 @@ def query_api_zipcode(zipcode):
         data = None
     return data
 
-@app.route('/')
-def hello():
-    greet = '<h1>Welcome to the topping weather app</h1>'
-    content = '<p>Only weather for 8508 topping road</p>'  
-    local_link = """<p><input onClick="window.location.href='/weather/21208'" type="submit" Value="Weather for 21208"></p>"""
-    link1 = "<p><a href='/weather/historical/1'>Yesterday's weather!</a></p>"
-    link2 = "<p><a href='/weather/historical/2'>2 days ago weather!</a></p>"
-    link3 = "<p><a href='/weather/historical/3'>3 days ago weather!</a></p>"
-    return greet + content + local_link + link1 + link2 + link3
+@app.route('/user/<name>')
+def user(name):
+    return render_template('hello.html', name=name)
 
 @app.route('/weather/<zipcode>')
 def result_zipcode(zipcode):
