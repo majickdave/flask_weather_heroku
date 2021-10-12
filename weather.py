@@ -15,7 +15,7 @@ app = Flask(__name__)
 API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 
 # get weather by U.S. zip code
-ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=daily,hourly,minutely,alerts&units=imperial&appid={}')
+ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=daily,minutely,alerts&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 
@@ -62,9 +62,9 @@ def result_zipcode(zipcode):
     dt = get_date_now()
     resp = query_api_zipcode(zipcode)
     try:      
-        description, dt, icon_code, image_url, text = get_current_forecast(resp)
+        description, dt, image_url = get_forecast(resp, duration='current')
 
-        return render_template('current.html', current_forecast=text, date=dt, weather_description=description, 
+        return render_template('current.html', date=dt, weather_description=description, 
             the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
         text = "There was an error.  Did you include a valid U.S. zip code in the URL?"
@@ -84,17 +84,11 @@ def result_historical(zipcode, days):
     # construct a string using the json data items for temp and
     # description
     try:
-        description, dt, icon_code, image_url, text = get_current_forecast(resp)
-        return render_template('current.html', current_forecast=text, date=dt, weather_description=description, 
-            the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
+        return render_template('hourly.html', data=resp)
     except:
         text = "There was an error.  Did you use days <= 5?"
 
         return render_template('404.html', error_message=text)
-    
-    # parsed = json.loads(resp)
-    # return json.dumps(parsed, indent=4, sort_keys=True)
-    return resp
 
 if __name__ == '__main__':
     app.run(debug=True)

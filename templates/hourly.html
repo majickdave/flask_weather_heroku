@@ -1,8 +1,14 @@
-{% extends 'current.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<!-- the full dict for a president is sent here as pres by the route -->
-<h2>Hourly</h2>
+<ul>
+    {% for item in data['hourly'] %}
+    <li><p>{{ item }}</p></li>
+    <!-- <p>{{ item['weather'][0]['description'] }}</p>
+    <img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img> -->
+    {% endfor %}
+</ul>
+
 
 {% endblock %}

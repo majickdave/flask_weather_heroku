@@ -2,11 +2,10 @@
 
 {% block content %}
 
-<!-- the full dict for a president is sent here as pres by the route -->
 <h1>Weather</h1>
 <img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img>
 <h2>{{ date }}</h2>
-<p>{{ current_forecast }}</p>
+<h3>{{ weather_description }}</h3>
 
 
 {% endblock %}
