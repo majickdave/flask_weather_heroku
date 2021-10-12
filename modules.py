@@ -31,3 +31,14 @@ def get_coords_from_zip(zipcode):
 
     return lat, lon
 
+def get_current_forecast(resp):
+    description = resp["current"]["weather"][0]["description"]
+        
+    dt = get_date_from_utc(resp['current']['dt'])
+    icon_code = resp["current"]["weather"][0]['icon']
+    image_url =  f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
+
+    text = "Current temperature is " + str(resp["current"]["temp"]) + " ℉ with " + description + "."
+
+    return description, dt, icon_code, image_url, text
+

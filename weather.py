@@ -23,17 +23,20 @@ HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?
 def index():
     return render_template('index.html', days=list(range(1,6)), the_title="Dave's weather app")
 
-def query_api_historical(days):
-    """submit the API query using variables for zip and API_KEY"""
+def query_api_historical(days_ago):
+    """submit the API query using variables for days and API_KEY"""
 
-    date = get_date_from_days(days)
+    # get date from number of days ago
+    date = get_date_from_days(days_ago)
     
     try:
         print(HISTORY_API_URL.format(date, API_KEY))
         data = requests.get(HISTORY_API_URL.format(date, API_KEY)).json()
+        data
     except Exception as exc:
         print(exc)
         data = None
+    
     return data
 
 def query_api_zipcode(zipcode):
@@ -57,16 +60,9 @@ def result_zipcode(zipcode):
 
     """
     dt = get_date_now()
-
-    try:
-        resp = query_api_zipcode(zipcode)
-        description = resp["current"]["weather"][0]["description"]
-         
-        dt = get_date_from_utc(resp['current']['dt'])
-        icon_code = resp["current"]["weather"][0]['icon']
-        image_url =  f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
-
-        text = "Current temperature is " + str(resp["current"]["temp"]) + " ℉ with " + description + "." 
+    resp = query_api_zipcode(zipcode)
+    try:      
+        description, dt, icon_code, image_url, text = get_current_forecast(resp)
 
         return render_template('current.html', current_forecast=text, date=dt, weather_description=description, 
             the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
@@ -77,8 +73,8 @@ def result_zipcode(zipcode):
 
 
 
-@app.route('/weather/historical/<days>')
-def result_historical(days):
+@app.route('/weather/<zipcode>/historical/<days>')
+def result_historical(zipcode, days):
     """
     return a day in history up to 5 days back
 
@@ -88,9 +84,13 @@ def result_historical(days):
     # construct a string using the json data items for temp and
     # description
     try:
-        text = resp["name"] + " temperature is " + str(resp["main"]["temp"]) + " degrees Fahrenheit with " + resp["weather"][0]["description"] + "."
+        description, dt, icon_code, image_url, text = get_current_forecast(resp)
+        return render_template('current.html', current_forecast=text, date=dt, weather_description=description, 
+            the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
-        text = "There was an error.<br>Did you include a valid U.S. zip code in the URL?"
+        text = "There was an error.  Did you use days <= 5?"
+
+        return render_template('404.html', error_message=text)
     
     # parsed = json.loads(resp)
     # return json.dumps(parsed, indent=4, sort_keys=True)
