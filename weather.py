@@ -15,7 +15,7 @@ app = Flask(__name__)
 API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 
 # get weather by U.S. zip code
-ZIPCODE_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
+ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=daily,hourly,minutely,alerts&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 
@@ -42,15 +42,12 @@ def query_api_zipcode(zipcode):
     lat, lon = get_coords_from_zip(zipcode)
     try:
         # print(HISTORY_API_URL.format(date, API_KEY))
-        data = requests.get(ZIPCODE_API_URL.format(lat, lon, API_KEY)).json()
+        data = requests.get(ONECALL_API_URL.format(lat, lon, API_KEY)).json()
     except Exception as exc:
         print(exc)
         data = None
     return data
 
-@app.route('/user/<name>')
-def user(name):
-    return render_template('hello.html', name=name)
 
 @app.route('/weather/<zipcode>')
 def result_zipcode(zipcode):
@@ -59,18 +56,26 @@ def result_zipcode(zipcode):
     [current, minutely, hourly, daily, alerts]
 
     """
-    # get the json file from the OpenWeather API
-    resp = query_api_zipcode(zipcode)
-    # construct a string using the json data items for temp and
-    # description
+    dt = get_date_now()
+
     try:
-        text = resp["name"] + " temperature is " + str(resp["main"]["temp"]) + " degrees Fahrenheit with " + resp["weather"][0]["description"] + "."
+        resp = query_api_zipcode(zipcode)
+        description = resp["current"]["weather"][0]["description"]
+         
+        dt = get_date_from_utc(resp['current']['dt'])
+        icon_code = resp["current"]["weather"][0]['icon']
+        image_url =  f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
+
+        text = "Current temperature is " + str(resp["current"]["temp"]) + " ℉ with " + description + "." 
+
+        return render_template('current.html', current_forecast=text, date=dt, weather_description=description, 
+            the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
-        text = "There was an error.<br>Did you include a valid U.S. zip code in the URL?"
-    
-    # parsed = json.loads(resp)
-    # return json.dumps(parsed, indent=4, sort_keys=True)
-    return resp
+        text = "There was an error.  Did you include a valid U.S. zip code in the URL?"
+
+        return render_template('404.html', error_message=text)
+
+
 
 @app.route('/weather/historical/<days>')
 def result_historical(days):

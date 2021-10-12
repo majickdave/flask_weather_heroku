@@ -2,6 +2,7 @@ from datetime import timezone
 import datetime
 import pytz
 import pgeocode
+import json
 
 def get_date_from_days(days):
     dt = datetime.datetime.now(pytz.timezone('EST')) + datetime.timedelta(days=-1 * int(days))
@@ -9,6 +10,14 @@ def get_date_from_days(days):
     date = round(utc_time.timestamp())
 
     return date
+
+def get_date_now():
+    dt = datetime.datetime.now()
+
+    return dt.strftime('%A, %B %d 0:%I:%M%p')
+
+def get_date_from_utc(utc_date):
+    return datetime.datetime.fromtimestamp(utc_date).strftime('%A, %B %d %I:%M%p')
 
 def get_coords_from_zip(zipcode):
     """
