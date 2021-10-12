@@ -2,7 +2,6 @@ from datetime import timezone
 import datetime
 import pytz
 import pgeocode
-import json
 
 def get_date_from_days(days):
     dt = datetime.datetime.now(pytz.timezone('EST')) + datetime.timedelta(days=-1 * int(days))
