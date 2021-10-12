@@ -15,13 +15,13 @@ app = Flask(__name__)
 API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 
 # get weather by U.S. zip code
-ZIPCODE_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=[current, minutely, hourly, alerts]&units=imperial&appid={}')
+ZIPCODE_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', days=list(range(1,8)), the_title="Dave's weather app")
+    return render_template('index.html', days=list(range(1,6)), the_title="Dave's weather app")
 
 def query_api_historical(days):
     """submit the API query using variables for zip and API_KEY"""
@@ -57,8 +57,7 @@ def result_zipcode(zipcode):
     """
     options for exclude:
     [current, minutely, hourly, daily, alerts]
-    http://127.0.0.1:5000/weather/39.40538934466007:-76.70943148008318:(hourly,%20minutely)
-    https://api.openweathermap.org/data/2.5/onecall?lat=39.40538934466007&lon=-76.70943148008318&exclude=[hourly,minutely]&units=imperial&appid=17afee29d93a1db02dda0f1817e0aca1
+
     """
     # get the json file from the OpenWeather API
     resp = query_api_zipcode(zipcode)
@@ -76,10 +75,8 @@ def result_zipcode(zipcode):
 @app.route('/weather/historical/<days>')
 def result_historical(days):
     """
-    options for exclude:
-    [current, minutely, hourly, daily, alerts]
-    http://127.0.0.1:5000/weather/39.40538934466007:-76.70943148008318:(hourly,%20minutely)
-    https://api.openweathermap.org/data/2.5/onecall?lat=39.40538934466007&lon=-76.70943148008318&exclude=[hourly,minutely]&units=imperial&appid=17afee29d93a1db02dda0f1817e0aca1
+    return a day in history up to 5 days back
+
     """
     # get the json file from the OpenWeather API
     resp = query_api_historical(days)

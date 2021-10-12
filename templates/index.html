@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<h1>Historical Weather 🌦</h1>
+<h1>Weather 🌦</h1>
 <subtitle>for 8508 Topping Road</subtitle>
 <p><input onClick="window.location.href='/weather/21208'" type="submit" Value="Weather for 21208"></p>
-<p>Click for any day weather</p>
+<p>Click for historical weather forecasts up to 5 days</p>
 
 <!-- pairs is a list that must be sent here by a route function
      The list will contain 45 pairs: a presidency number, and a
@@ -15,7 +15,7 @@
     {% for day in days %}
     </p>
         {% if day < 2 %}
-            <li><a href='/weather/historical/{{ day }}'>{{ day }} day ago: </a></li>
+            <li><a href='/weather/historical/{{ day }}'>yesterday</a></li>
         {% else %}
             <li><a href='/weather/historical/{{ day }}'>{{ day }} days ago: </a></li>
         {% endif %}
