@@ -10,13 +10,13 @@ def get_date_from_days(days):
 
     return date
 
-def get_date_now():
+def get_date_now(date_only=False):
     dt = datetime.datetime.now()
 
     return dt.strftime('%A, %B %d 0:%I:%M%p')
 
 def get_date_from_utc(utc_date):
-    return datetime.datetime.fromtimestamp(utc_date).strftime('%A, %B %d %I:%M%p')
+    return datetime.datetime.fromtimestamp(utc_date)
 
 def get_coords_from_zip(zipcode):
     """
@@ -39,12 +39,17 @@ def get_forecast(resp, duration='current'):
         icon_size = '1'
 
     description = resp["weather"][0]["description"]
-    dt = get_date_from_utc(resp['dt'])
+    dt = resp['dt']
     icon_code = resp["weather"][0]['icon']
     text = "Current temperature is " + str(resp["temp"]) + " ℉ with " + description + "."
 
     image_url =  f"http://openweathermap.org/img/wn/{icon_code}@{icon_size}x.png"
 
     return description, dt, image_url
+
+def get_icon_url(icon_code, icon_size=1):
+    image_url =  f"http://openweathermap.org/img/wn/{icon_code}@{icon_size}x.png"
+
+    return image_url
     
 

@@ -6,7 +6,7 @@
 import requests
 import json
 from flask import Flask
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from modules import *
 
 app = Flask(__name__)
@@ -22,6 +22,10 @@ HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?
 @app.route('/')
 def index():
     return render_template('index.html', days=list(range(1,6)), the_title="Dave's weather app")
+
+@app.route('/weather')
+def home_redirect():
+    return redirect("/") 
 
 def query_api_historical(days_ago):
     """submit the API query using variables for days and API_KEY"""
@@ -63,8 +67,7 @@ def result_zipcode(zipcode):
     resp = query_api_zipcode(zipcode)
     try:      
         description, dt, image_url = get_forecast(resp, duration='current')
-
-        return render_template('current.html', date=dt, weather_description=description, 
+        return render_template('current.html', func=get_date_from_utc, date=dt, weather_description=description, 
             the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
         text = "There was an error.  Did you include a valid U.S. zip code in the URL?"
@@ -84,7 +87,7 @@ def result_historical(zipcode, days):
     # construct a string using the json data items for temp and
     # description
     try:
-        return render_template('hourly.html', data=resp)
+        return render_template('hourly.html', get_icon=get_icon_url, data=resp, get_date=get_date_from_utc)
     except:
         text = "There was an error.  Did you use days <= 5?"
 
