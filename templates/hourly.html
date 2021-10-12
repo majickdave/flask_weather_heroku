@@ -5,16 +5,15 @@
 <h1>{{ get_date(data['current']['dt']).strftime('%A, %B %d') }}</h1>
 <ul>
     {% for item in data['hourly'] %}
-    <li>
-        <span>
-            <p>{{ get_date(item['dt']).strftime('%I %p') }}</p>
-            <strong>{{ item['weather'][0]['description'] }}</strong>
-        </span>
-            <img class="weather_icon" src="http://openweathermap.org/img/wn/{{ item['weather'][0]['icon'] }}@2x.png" alt="icon for {{ item['weather'][0]['description'] }}"></img>
+
+        <img class="weather_icon" src="http://openweathermap.org/img/wn/{{ item['weather'][0]['icon'] }}@2x.png" alt="icon for {{ item['weather'][0]['description'] }}"></img>
+        <div>
+            <p>{{ get_date(item['dt']).strftime('%I%p') }} {{ item['weather'][0]['description'] }} </p>
         
-        <!-- <p>{{ item['weather'][0]['description'] }}</p>
-    <img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img> -->
-    </li>
+            
+            <hr>
+        </div>
+
     {% endfor %}
 </ul>
 

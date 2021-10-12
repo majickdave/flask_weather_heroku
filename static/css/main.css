@@ -45,8 +45,9 @@ img {
 
 .weather_icon {
     border-radius: 10px;
-    display: block;
-    float: right;
+    float: left;
+    height: 60px;
+    width: 60px;
 }
 
 /* links */

@@ -15,7 +15,7 @@ app = Flask(__name__)
 API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 
 # get weather by U.S. zip code
-ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=daily,minutely,alerts&units=imperial&appid={}')
+ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 
@@ -63,16 +63,14 @@ def result_zipcode(zipcode):
     [current, minutely, hourly, daily, alerts]
 
     """
-    dt = get_date_now()
     resp = query_api_zipcode(zipcode)
+
     try:      
         description, dt, image_url = get_forecast(resp, duration='current')
-        return render_template('current.html', func=get_date_from_utc, date=dt, weather_description=description, 
+        return render_template('current.html', data=resp['hourly'], get_date=get_date_from_utc, date=dt, weather_description=description, 
             the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
-        text = "There was an error.  Did you include a valid U.S. zip code in the URL?"
-
-        return render_template('404.html', error_message=text)
+        return render_template('404.html', error_message="something went wrong")
 
 
 
