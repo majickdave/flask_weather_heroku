@@ -8,11 +8,12 @@ import json
 from flask import Flask
 from flask import Flask, render_template, redirect
 from modules import *
+import os
 
 app = Flask(__name__)
 
 # this is not a real key
-API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
+API_KEY = os.getenv("API_KEY")
 
 # get weather by U.S. zip code
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
