@@ -35,13 +35,13 @@
 <span>
     <container class="daily">
         <div class="center">
-            <div style="width: 100px">
+            <div style="width: 60px">
                 {{ get_date(day['dt']).strftime('%A') }}
             </div>
                 <img src="http://openweathermap.org/img/wn/{{ day['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['weather'][0]['description'] }}"></img>
                 <!-- {{ day['rain'] }} -->
             <div>
-                {{ round(day['temp']['max']) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ round(day['temp']['min']) }} 
+                {{ round(day['temp']['max']) }}&nbsp;&nbsp;&nbsp;{{ round(day['temp']['min']) }} 
             </div>
         </div>
     </container>
