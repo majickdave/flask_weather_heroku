@@ -2,21 +2,20 @@
 
 {% block content %}
 
-<img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img>
-<h2>{{ func(date).strftime('%A, %B %d %I:%M%p') }}</h2>
-<h3>{{ weather_description }}</h3>
+<h1>Weather</h1>
+    <!-- <img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img>
+<h2>{{ get_date(date).strftime('%A, %B %d') }}</h2>
+<p>{{ weather_description }}</p> -->
+<ul>
+    {% for item in data['daily'] %}
+    <img class="weather_icon" src="http://openweathermap.org/img/wn/{{ item['weather'][0]['icon'] }}@2x.png" alt="icon for {{ item['weather'][0]['description'] }}"></img>
 
-{% for item in data %}
-    <li>
-        <div>
-            <p>{{ get_date(item['dt']).strftime('%I %p') }}</p>
-            <strong>{{ item['weather'][0]['description'] }}</strong>
-       
-            <img class="weather_icon" src="http://openweathermap.org/img/wn/{{ item['weather'][0]['icon'] }}@2x.png" alt="icon for {{ item['weather'][0]['description'] }}"></img>
-        </div>
-        <!-- <p>{{ item['weather'][0]['description'] }}</p>
-    <img class="weather_icon" src="{{ weather_image_url }}" alt="icon for {{ weather_description }}"></img> -->
-    </li>
+    <div>
+        <p>{{ get_date(item['dt']).strftime('%m/%d') }}</p>
+        
+    </div>
+    <hr>
 {% endfor %}
+</ul>
 
 {% endblock %}

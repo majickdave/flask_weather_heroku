@@ -46,10 +46,95 @@ img {
 .weather_icon {
     border-radius: 10px;
     float: left;
+    height: 36px;
+    width: 36px;
+}
+
+.main_weather_icon {
+    border-radius: 10px;
     height: 60px;
     width: 60px;
 }
 
+.weather_box {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    text-align:center;
+    align-items: center;
+}
+
+.hi_lo {
+    font-size: 1rem;
+    line-height: 0.8;
+    text-align:center;
+    align-items: center;
+}
+
+div.scrollmenu {
+    overflow: auto;
+    white-space: nowrap;
+  }
+
+div.scrollmenu img {
+    display: inline-block;
+    height: 48px;
+    width: 48px;
+    margin-block-end: 1px;
+  }
+
+div.scrollmenu p {
+    font-size: 1rem;
+    line-height: 0.8;
+    text-align:center;
+    align-items: center;
+    padding: 10px;
+  }
+
+
+div.description {
+    text-align: center;
+}
+
+div.description p {
+    font-size: 0.8rem;
+    line-height: 0.6;
+}
+
+div.description h2 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: -5px;
+}
+
+div.daily p {
+    font-size: 1.2rem;
+    line-height: 1;
+    text-align: left;
+}
+
+
+img.daily {
+    height: 48px;
+    width: 48px;
+    vertical-align: top;
+  }
+
+container.daily {
+    padding: -50px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+  }
+
+div.center img {
+    position: relative;
+    height: 48px;
+    width: 48px;
+}
 /* links */
 
 a {

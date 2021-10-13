@@ -2,24 +2,64 @@
 
 {% block content %}
 
-<h1>Weather 🌦</h1>
-<subtitle>for 8508 Topping Road</subtitle>
-<p><input onClick="window.location.href='/weather/21208'" type="submit" Value="Weather for 21208"></p>
-<p>Click for historical weather forecasts up to 5 days</p>
+<container>
+    <div class="description">
+        <h2>Pikesville</h2>
+        <p>{{ data['current']['weather'][0]['description'] }}</p>
 
-<!-- pairs is a list that must be sent here by a route function
-     The list will contain 45 pairs: a presidency number, and a
-     president's name -->
 
+    <h1 class="weather_box">{{ round(data['current']['temp']) }}°</h1>
+    <p class="hi_lo">H:{{ round(data['daily'][0]['temp']['max']) }}° L:{{ round(data['daily'][0]['temp']['min']) }}°</p>
+</div>
+</container>
+<hr>
+<div class="scrollmenu">
+    {% for i, hour in enumerate(data['hourly']) %}
+    <span style="display:inline-block; vertical-align:middle">
+        {% if i == 0 %}
+            <p>Now</p>
+        {% else %}
+            <span style="display:inline;">
+                <p>{{ get_date(hour['dt']).strftime('%-I%p') }}</p>
+            </span>
+        {% endif %}
+        <img src="http://openweathermap.org/img/wn/{{ hour['weather'][0]['icon'] }}@2x.png" alt="icon for {{ hour['weather'][0]['description'] }}"></img>
+        <p>{{ round(hour['temp']) }}°</p>
+    </span>
+    {% endfor %}
+</div>
+<hr>
+
+    {% for day in data['daily'] %}
+
+<span>
+    <container class="daily">
+        <div class="center">
+            <div style="width: 100px">
+                {{ get_date(day['dt']).strftime('%A') }}
+            </div>
+                <img src="http://openweathermap.org/img/wn/{{ day['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['weather'][0]['description'] }}"></img>
+                <!-- {{ day['rain'] }} -->
+            <div>
+                {{ round(day['temp']['max']) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ round(day['temp']['min']) }} 
+            </div>
+        </div>
+    </container>
+</span>
+
+{% endfor %}
+
+
+<div>
     <ul>
     {% for day in days %}
-    </p>
         {% if day < 2 %}
             <li><a href='/weather/21208/historical/{{ day }}'>yesterday</a></li>
         {% else %}
-            <li><a href='/weather/21208/historical/{{ day }}'>{{ day }} days ago: </a></li>
+            <li><a href='/weather/21208/historical/{{ day }}'>{{ day }} days ago</a></li>
         {% endif %}
     {% endfor %}
     </ul>
+</div>
 
 {% endblock %}

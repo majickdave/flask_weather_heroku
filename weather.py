@@ -21,7 +21,10 @@ HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?
 
 @app.route('/')
 def index():
-    return render_template('index.html', days=list(range(1,6)), the_title="Dave's weather app")
+    resp = query_api_zipcode(21208)
+    return render_template('index.html', get_date=get_date_from_utc, enumerate=enumerate,
+    data=resp, days=list(range(1,6)), the_title="Dave's weather app",
+    round=round)
 
 @app.route('/weather')
 def home_redirect():
@@ -67,7 +70,7 @@ def result_zipcode(zipcode):
 
     try:      
         description, dt, image_url = get_forecast(resp, duration='current')
-        return render_template('current.html', data=resp['hourly'], get_date=get_date_from_utc, date=dt, weather_description=description, 
+        return render_template('current.html', data=resp, get_date=get_date_from_utc, date=dt, weather_description=description, 
             the_title=f"Current Weather for {zipcode}", weather_image_url=image_url)
     except:
         return render_template('404.html', error_message="something went wrong")
