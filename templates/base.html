@@ -13,12 +13,23 @@
 <body>
 
 <div id="container">
-    <!-- <a href="/">🏠 home</a> -->
+    <a href="/">🏠 home</a>
   <!-- Jinja directives: page contents will go between them -->
   {% block content %}
   {% endblock %}
-
+  <div>
+    <ul>
+    {% for day in days %}
+        {% if day < 2 %}
+            <li><a href='/weather/21208/historical/{{ day }}'>yesterday</a></li>
+        {% else %}
+            <li><a href='/weather/21208/historical/{{ day }}'>{{ day }} days ago</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
 </div>
+</div>
+
 
 </body>
 </html>

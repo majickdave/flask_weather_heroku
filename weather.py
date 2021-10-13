@@ -90,14 +90,7 @@ def result_historical(zipcode, days):
     try:
         return render_template('hourly.html', get_icon=get_icon_url, data=resp, get_date=get_date_from_utc, round=round)
     except Exception as exc:
-        text = "There was an error.  Did you use days <= 5?"
-
         return render_template('404.html', error_message=exc)
-
-@app.route('/weather/historical')
-def days_history():
-    resp = requests.get(API_URL.format(1))
-    return render_template('history_hourly.html', get_icon=get_icon_url, data=days, get_date=get_date_from_utc, round=round)
 
 
 if __name__ == '__main__':
