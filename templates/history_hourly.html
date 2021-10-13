@@ -1,11 +1,12 @@
-{% extends 'current.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-
 <h1>Historical Weather</h1>
-<subtitle>{{ get_date(data['current']['dt']).strftime('%A, %B %d') }}</subtitle>
+{% for day in data %}
+
+<subtitle>{{ get_date(day['current']['dt']).strftime('%A, %B %d') }}</subtitle>
 <div class="scrollmenu">
-    {% for hour in data['hourly'] %}
+    {% for hour in day['hourly'] %}
     <span style="display:inline-block; vertical-align:middle">
         <span style="display:inline;">
                 <p>{{ get_date(hour['dt']).strftime('%-I%p') }}</p>
@@ -15,6 +16,7 @@
     </span>
     {% endfor %}
 </div>
+{% endfor %}
 
 
 

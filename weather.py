@@ -17,7 +17,7 @@ API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
 # get weather by U.S. zip code
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
-
+API_URL = ("https://daves-weather-api.herokuapp.com//weather/21208/historical/{}")
 
 @app.route('/')
 def index():
@@ -88,11 +88,17 @@ def result_historical(zipcode, days):
     # construct a string using the json data items for temp and
     # description
     try:
-        return render_template('hourly.html', get_icon=get_icon_url, data=resp, get_date=get_date_from_utc)
-    except:
+        return render_template('hourly.html', get_icon=get_icon_url, data=resp, get_date=get_date_from_utc, round=round)
+    except Exception as exc:
         text = "There was an error.  Did you use days <= 5?"
 
-        return render_template('404.html', error_message=text)
+        return render_template('404.html', error_message=exc)
+
+@app.route('/weather/historical')
+def days_history():
+    resp = requests.get(API_URL.format(1))
+    return render_template('history_hourly.html', get_icon=get_icon_url, data=days, get_date=get_date_from_utc, round=round)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
