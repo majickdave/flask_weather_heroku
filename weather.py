@@ -12,13 +12,14 @@ import os
 
 app = Flask(__name__)
 
-# obtain keys from ~./../python
-# config = ConfigParser()
-# config.read('../../config/keys_config.cfg')
-# API_KEY = config.get('openweather', 'api_key')
-
-# env key
-API_KEY = os.getenv("API_KEY")
+if not os.getenv("API_KEY"):
+    # obtain keys from ~./../python
+    config = ConfigParser()
+    config.read('../../config/keys_config.cfg')
+    API_KEY = config.get('openweather', 'api_key')
+else:
+    # env key
+    API_KEY = os.getenv("API_KEY")
 
 # get historical and current weather
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
@@ -55,6 +56,7 @@ def query_api_zipcode(zipcode):
     """submit the API query using variables for zip and API_KEY"""
     
     lat, lon = get_coords_from_zip(zipcode)
+    print("API_KEY", API_KEY)
     try:
         print(ONECALL_API_URL.format(lat, lon, API_KEY))
         data = requests.get(ONECALL_API_URL.format(lat, lon, API_KEY)).json()
