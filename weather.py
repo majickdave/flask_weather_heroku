@@ -12,11 +12,12 @@ import os
 
 app = Flask(__name__)
 
-# obtain keys from ~./Documents/python
-config = ConfigParser()
-config.read('../../config/keys_config.cfg')
-API_KEY = config.get('openweather', 'api_key')
-# this is not a real key
+# obtain keys from ~./../python
+# config = ConfigParser()
+# config.read('../../config/keys_config.cfg')
+# API_KEY = config.get('openweather', 'api_key')
+
+# env key
 API_KEY = os.getenv("API_KEY")
 
 # get historical and current weather
