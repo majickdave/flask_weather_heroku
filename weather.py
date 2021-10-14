@@ -8,6 +8,7 @@ from configparser import ConfigParser
 from flask import Flask
 from flask import Flask, render_template, redirect
 from modules import *
+import os
 
 app = Flask(__name__)
 
@@ -15,6 +16,8 @@ app = Flask(__name__)
 config = ConfigParser()
 config.read('../../config/keys_config.cfg')
 API_KEY = config.get('openweather', 'api_key')
+# this is not a real key
+API_KEY = os.getenv("API_KEY")
 
 # get historical and current weather
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
