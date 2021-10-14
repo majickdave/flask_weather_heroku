@@ -4,20 +4,21 @@
 """
 
 import requests
-import json
+from configparser import ConfigParser
 from flask import Flask
 from flask import Flask, render_template, redirect
 from modules import *
 
 app = Flask(__name__)
 
-# this is not a real key
-API_KEY = '17afee29d93a1db02dda0f1817e0aca1'
+# obtain keys from ~./Documents/python
+config = ConfigParser()
+config.read('../../config/keys_config.cfg')
+API_KEY = config.get('openweather', 'api_key')
 
-# get weather by U.S. zip code
+# get historical and current weather
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
-API_URL = ("https://daves-weather-api.herokuapp.com//weather/21208/historical/{}")
 
 @app.route('/')
 def index():
@@ -51,7 +52,7 @@ def query_api_zipcode(zipcode):
     
     lat, lon = get_coords_from_zip(zipcode)
     try:
-        # print(HISTORY_API_URL.format(date, API_KEY))
+        print(ONECALL_API_URL.format(lat, lon, API_KEY))
         data = requests.get(ONECALL_API_URL.format(lat, lon, API_KEY)).json()
     except Exception as exc:
         print(exc)

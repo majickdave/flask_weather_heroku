@@ -30,23 +30,41 @@
 </div>
 <hr>
 
-    {% for day in data['daily'] %}
-
-<span>
-    <container class="daily">
-        <div class="center">
-            <div style="width: 60px">
-                {{ get_date(day['dt']).strftime('%A') }}
+{% for day in data['daily'] %}
+    <span>
+        <container class="daily">
+            <div class="center">
+                <div style="width: 60px">
+                    {{ get_date(day['dt']).strftime('%A') }}
+                </div>
+                    
+                    <img src="http://openweathermap.org/img/wn/{{ day['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['weather'][0]['description'] }}"></img>
+                <div>
+                    {{ round(day['temp']['max']) }}&nbsp;&nbsp;&nbsp;{{ round(day['temp']['min']) }} 
+                </div>
             </div>
-                <img src="http://openweathermap.org/img/wn/{{ day['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['weather'][0]['description'] }}"></img>
-                <!-- {{ day['rain'] }} -->
-            <div>
-                {{ round(day['temp']['max']) }}&nbsp;&nbsp;&nbsp;{{ round(day['temp']['min']) }} 
-            </div>
-        </div>
-    </container>
-</span>
-
+        </container>
+    </span>
 {% endfor %}
+<hr>
+<!-- <container style="width: 300px">
+    <span>
+        <div class="scrollmenu">
+            <div style="display:inline-block; vertical-align:middle">
+                <div style="font-size: x-small;">
+                    SUNRISE 
+                </div>
+                {{ get_date(data['current']['sunrise']).strftime('%-I:%M%p') }}
 
+                <div style="display:inline-block; vertical-align:middle;  text-align: right;">
+                    <div style="font-size: x-small;">
+                        SUNSET 
+                    </div>
+                    {{ get_date(data['current']['sunset']).strftime('%-I:%M%p') }}
+                </div>
+            </span>
+        </div>
+    </span>
+</container> -->
 {% endblock %}
+
