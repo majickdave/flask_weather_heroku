@@ -2,6 +2,18 @@ from datetime import timezone
 import datetime
 import pytz
 import pgeocode
+import googlemaps
+
+def get_city(lat, lon, api_key, address=None):
+    gmaps = googlemaps.Client(api_key)
+
+    if address:
+        # Geocoding an address
+        geocode_result = gmaps.geocode(address)
+    # Look up an address with reverse geocoding
+    address = gmaps.reverse_geocode((lat, lon))
+
+    return address[0]['address_components'][2]['short_name']
 
 def get_date_from_days(days):
     dt = datetime.datetime.now(pytz.timezone('EST')) + datetime.timedelta(days=-1 * int(days))
@@ -51,5 +63,19 @@ def get_icon_url(icon_code, icon_size=1):
     image_url =  f"http://openweathermap.org/img/wn/{icon_code}@{icon_size}x.png"
 
     return image_url
+
+def get_wind_direction(degrees):
+    """
+    get closest wind direction
+    """
+    deg_dict = dict([(x * (360 / 16), direction) for x, 
+                 direction in list(zip(range(17),
+    ("N","NNE","NE","ENE","E","ESE","SE","SSE","S",
+     "SSW","SW","WSW","W","WNW","NW","NNW","N")))])
+
+    vals = []
+    for i, (value, drx) in enumerate(deg_dict.items()):
+        vals.append((abs(degrees - value), drx))
     
+    return min(vals, key=lambda x: x[0])[1]
 

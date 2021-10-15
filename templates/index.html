@@ -4,7 +4,7 @@
 
 <container>
     <div class="description">
-        <h2>Pikesville</h2>
+        <h2>{{ city }}</h2>
         <p>{{ data['current']['weather'][0]['description'] }}</p>
 
 
@@ -13,24 +13,25 @@
 </div>
 </container>
 <hr>
+
 <div class="scrollmenu">
     {% for i, hour in enumerate(data['hourly']) %}
-    <span style="display:inline-block; vertical-align:middle">
+    <span style="display:inline-block; vertical-align:middle;">
         {% if i == 0 %}
-            <p>Now</p>
+            <p style="padding: 0px">Now</p>
         {% else %}
-            <span style="display:inline;">
-                <p>{{ get_date(hour['dt']).strftime('%-I%p') }}</p>
+            <span>
+                <p style="padding: 0px">{{ get_date(hour['dt']).strftime('%-I%p') }}</p>
             </span>
         {% endif %}
-        <img src="http://openweathermap.org/img/wn/{{ hour['weather'][0]['icon'] }}@2x.png" alt="icon for {{ hour['weather'][0]['description'] }}"></img>
-        <p>{{ round(hour['temp']) }}°</p>
+        <img style="padding: 0px" src="http://openweathermap.org/img/wn/{{ hour['weather'][0]['icon'] }}@2x.png" alt="icon for {{ hour['weather'][0]['description'] }}"></img>
+        <p style="padding: 0px">{{ round(hour['temp']) }}°</p>
     </span>
     {% endfor %}
 </div>
 <hr>
 
-{% for day in data['daily'] %}
+{% for day in data['daily'][1:] %}
     <span>
         <container class="daily">
             <div class="center">
@@ -46,7 +47,58 @@
         </container>
     </span>
 {% endfor %}
-<hr>
+
+<div class="grid-container">
+    <div class="grid-item">
+        <p class='label'>SUNRISE</p>
+        <p class='value'>{{ get_date(data['current']['sunrise']).strftime('%-I:%M%p') }}</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>SUNSET</p>
+        <p class='value'>{{ get_date(data['current']['sunset']).strftime('%-I:%M%p') }}</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>CHANCE OF RAIN</p>
+        {% if 'rain' not in data['daily'][0].keys() %}
+            <p class='value'>0%</p>
+        {% else %}
+            <p class='value'>{{ data['daily'][0]['rain'] }}</p>
+        {% endif %}
+    </div> 
+    <div class="grid-item">
+        <p class='label'>HUMIDITY</p>
+        <p class='value'>{{ data['current']['humidity'] }}%</p>
+    </div> 
+    <div class="grid-item">
+        <p class='label'>WIND</p>
+        <p class='value'>{{ get_wind(data['current']['wind_deg']) }} {{ round(data['current']['wind_speed']) }} mph</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>FEELS LIKE</p>
+        <p class='value'>{{ round(data['current']['feels_like']) }}°</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>PRECIPITATION</p>
+        {% if 'rain' in data['current'].keys() %}
+            <p class='value'>{{ round(data['current']['rain']) }} in</p>
+        {% else %}
+            <p class='value'>0 in</p>
+        {% endif %}
+    </div>
+    <div class="grid-item">
+        <p class='label'>PRESSURE</p>
+        <p class='value'>{{ round(data['current']['pressure'] / 33.863886666667, 2) }} inHg</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>VISIBILLITY</p>
+        <p class='value'>{{ round(data['current']['visibility'] *  0.000621371) }} miles</p>
+    </div>
+    <div class="grid-item">
+        <p class='label'>UV INDEX</p>
+        <p class='value'>{{ round(data['current']['uvi']) }}</p>
+    </div>
+ 
+  </div>
 <!-- <container style="width: 300px">
     <span>
         <div class="scrollmenu">

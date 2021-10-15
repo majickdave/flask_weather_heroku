@@ -140,6 +140,35 @@ div.center img {
     height: 48px;
     width: 48px;
 }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    padding: 10px;
+  }
+  .grid-item {
+    border-top: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: left;
+  }
+
+  div.grid-item .value {
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1;
+      padding: 0px;
+      text-align: left;
+      margin: auto;
+  }
+
+  div.grid-item .label {
+    font-size: 0.6rem;
+    line-height: 0.5;
+    padding: 0px;
+    margin-bottom: 5px;
+}
 /* links */
 
 a {

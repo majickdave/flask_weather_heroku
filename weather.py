@@ -13,12 +13,13 @@ import os
 app = Flask(__name__)
 
 if not os.getenv("API_KEY"):
-    # obtain keys from ~./../python
+    # obtain keys from .cfg locally from ~./../python
     config = ConfigParser()
     config.read('../../config/keys_config.cfg')
     API_KEY = config.get('openweather', 'api_key')
+    GOOGLE_API_KEY = config.get('google', 'geocode_api_key')
 else:
-    # env key
+    # get key from remote server env
     API_KEY = os.getenv("API_KEY")
 
 # get historical and current weather
@@ -26,11 +27,11 @@ ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
 
 @app.route('/')
-def index():
-    resp = query_api_zipcode(21208)
-    return render_template('index.html', get_date=get_date_from_utc, enumerate=enumerate,
+def index(zipcode=21208):
+    resp, my_city = query_api_zipcode(zipcode)
+    return render_template('index.html', city=my_city, get_date=get_date_from_utc, enumerate=enumerate,
     data=resp, days=list(range(1,6)), the_title="Dave's weather app",
-    round=round)
+    round=round, get_wind=get_wind_direction)
 
 @app.route('/weather')
 def home_redirect():
@@ -52,18 +53,23 @@ def query_api_historical(days_ago):
     
     return data
 
-def query_api_zipcode(zipcode):
+def query_api_zipcode(zipcode, query_city=False):
     """submit the API query using variables for zip and API_KEY"""
     
     lat, lon = get_coords_from_zip(zipcode)
-    print("API_KEY", API_KEY)
+
+    # Google geocode API
+    my_city = "Pikesville"
+    if query_city:  
+        my_city = get_city(lat, lon, GOOGLE_API_KEY) 
+
     try:
         print(ONECALL_API_URL.format(lat, lon, API_KEY))
         data = requests.get(ONECALL_API_URL.format(lat, lon, API_KEY)).json()
     except Exception as exc:
         print(exc)
         data = None
-    return data
+    return data, my_city
 
 
 @app.route('/weather/<zipcode>')
