@@ -8,6 +8,7 @@ from configparser import ConfigParser
 from flask import Flask
 from flask import Flask, render_template, redirect
 from modules import *
+import time
 import os
 
 app = Flask(__name__)
@@ -30,8 +31,15 @@ HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?
 @app.route('/')
 def index(zipcode=21208):
     resp, my_city = query_api_zipcode(zipcode)
+
+    hist_days = []
+    for i in range(3, 0, -1):
+        day = query_api_historical(i)
+        hist_days.append(day)
+        time.sleep(2)
+
     return render_template('index.html', city=my_city, get_date=get_date_from_utc, enumerate=enumerate,
-    data=resp, days=list(range(1,6)), the_title="Dave's weather app",
+    data=resp, the_title="Dave's weather app", hist_days=hist_days,
     round=round, get_wind=get_wind_direction)
 
 @app.route('/weather')

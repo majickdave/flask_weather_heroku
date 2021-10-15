@@ -31,9 +31,31 @@
 </div>
 <hr>
 
+<div class="history">
+{% for i, day in enumerate(hist_days) %}
+<span>
+    <!-- <a href="/weather/21208/historical/{{ i }}"> -->
+    <container class="daily">
+        <div class="center">
+            <div style="width: 60px">
+                {{ get_date(day['current']['dt']).strftime('%A') }}
+            </div>
+                
+                <img src="http://openweathermap.org/img/wn/{{ day['current']['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['current']['weather'][0]['description'] }}"></img>
+            <div>
+                {{ round(day['current']['temp']) }}&nbsp;&nbsp;&nbsp;{{ round(day['current']['temp']) }} 
+            </div>
+        </div>
+    </container>
+<!-- </a> -->
+</span>
+{% endfor %}
+</div>
+
+<hr>
 {% for day in data['daily'][1:] %}
     <span>
-        <container class="daily">
+        <container class="daily" style="border: cornflowerblue;">
             <div class="center">
                 <div style="width: 60px">
                     {{ get_date(day['dt']).strftime('%A') }}
@@ -100,5 +122,7 @@
  
   </div>
 
+<small>data by open <a href="https://openweathermap.org">weathermap.org</a></small>
 {% endblock %}
+
 

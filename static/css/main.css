@@ -169,6 +169,15 @@ div.center img {
     padding: 0px;
     margin-bottom: 5px;
 }
+
+.history {
+    display:block;
+    width:100%;
+    height:60px;
+    background-color:rgb(181, 217, 220);
+    overflow:scroll;
+    }
+
 /* links */
 
 a {
