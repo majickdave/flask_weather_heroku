@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 
-if not os.getenv("API_KEY"):
+if not os.getenv("API_KEY") or not os.getenv("GOOGLE_API_KEY"):
     # obtain keys from .cfg locally from ~./../python
     config = ConfigParser()
     config.read('../../config/keys_config.cfg')
