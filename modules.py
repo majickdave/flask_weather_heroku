@@ -1,6 +1,7 @@
 from datetime import timezone
-import datetime
+from datetime import datetime, timedelta
 import pytz
+from pytz import timezone
 import pgeocode
 import googlemaps
 
@@ -15,20 +16,20 @@ def get_city(lat, lon, api_key, address=None):
 
     return address[0]['address_components'][2]['short_name']
 
-def get_date_from_days(days):
-    dt = datetime.datetime.now(pytz.timezone('EST')) + datetime.timedelta(days=-1 * int(days))
-    utc_time = dt.replace(tzinfo=pytz.timezone('EST'))
+def get_date_from_days(days, tz='EST'):
+    dt = datetime.now(pytz.timezone(tz)) + timedelta(days=-1 * int(days))
+    utc_time = dt.replace(tzinfo=pytz.timezone(tz))
     date = round(utc_time.timestamp())
 
     return date
 
-def get_date_now(date_only=False):
-    dt = datetime.datetime.now()
+def get_date_now(date_only=False, tz='EST'):
+    dt = datetime.now()
 
     return dt.strftime('%A, %B %d 0:%I:%M%p')
 
-def get_date_from_utc(utc_date):
-    return datetime.datetime.fromtimestamp(utc_date)
+def get_date_from_utc(utc_date, tz='EST'):
+    return datetime.fromtimestamp(utc_date)
 
 def get_coords_from_zip(zipcode):
     """
