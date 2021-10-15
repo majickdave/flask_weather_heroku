@@ -21,6 +21,7 @@ if not os.getenv("API_KEY"):
 else:
     # get key from remote server env
     API_KEY = os.getenv("API_KEY")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # get historical and current weather
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
