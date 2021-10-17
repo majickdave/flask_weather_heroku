@@ -2,6 +2,15 @@
 
 {% block content %}
 
+{% if precip < 0.0001 %}
+<div style="background-color: rgb(255, 138, 147);">
+    ⚠️ Total 💧 last 3 days: {{ round(precip, 3) }} in
+</div>
+{% else %}
+<div>
+    Total 💧 last 3 days: {{ round(precip, 3) }} in
+</div>
+{% endif %}
 <container>
     <div class="description">
         <h2>{{ city }}</h2>
@@ -31,28 +40,6 @@
 </div>
 <hr>
 
-<div class="history">
-{% for i, day in enumerate(hist_days) %}
-<span>
-    <!-- <a href="/weather/21208/historical/{{ i }}"> -->
-    <container class="daily">
-        <div class="center">
-            <div style="width: 60px">
-                {{ get_date(day['current']['dt']).strftime('%A') }}
-            </div>
-                
-                <img src="http://openweathermap.org/img/wn/{{ day['current']['weather'][0]['icon'] }}@2x.png" alt="icon for {{ day['current']['weather'][0]['description'] }}"></img>
-            <div>
-                {{ round(day['current']['temp']) }}&nbsp;&nbsp;&nbsp;{{ round(day['current']['temp']) }} 
-            </div>
-        </div>
-    </container>
-<!-- </a> -->
-</span>
-{% endfor %}
-</div>
-
-<hr>
 {% for day in data['daily'][1:] %}
     <span>
         <container class="daily" style="border: cornflowerblue;">

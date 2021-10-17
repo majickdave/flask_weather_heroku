@@ -18,33 +18,54 @@ if not os.getenv("API_KEY") or not os.getenv("GOOGLE_API_KEY"):
     config = ConfigParser()
     config.read('../../config/keys_config.cfg')
     API_KEY = config.get('openweather', 'api_key')
+    AGRO_KEY = config.get('agro', 'api_key')
     GOOGLE_API_KEY = config.get('google', 'geocode_api_key')
 else:
     # get key from remote server env
     API_KEY = os.getenv("API_KEY")
+    AGRO_KEY = config.get("AGRO_API_KEY")
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # get historical and current weather
 ONECALL_API_URL = ('https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=&units=imperial&appid={}')
 HISTORY_API_URL = ('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.40538934466007&lon=-76.70943148008318&dt={}&units=imperial&appid={}')
+PRECIP_API_URL = ('https://api.weatherbit.io/v2.0/history/daily?postal_code=21208&country=US&start_date={}&end_date={}&key={}')
 
 @app.route('/')
 def index(zipcode=21208):
     resp, my_city = query_api_zipcode(zipcode)
-
-    hist_days = []
-    for i in range(3, 0, -1):
-        day = query_api_historical(i)
-        hist_days.append(day)
-        time.sleep(2)
-
+    precip = query_precip()
     return render_template('index.html', city=my_city, get_date=get_date_from_utc, enumerate=enumerate,
-    data=resp, the_title="Dave's weather app", hist_days=hist_days,
+    data=resp, the_title="Dave's weather app", precip=precip,
     round=round, get_wind=get_wind_direction)
 
 @app.route('/weather')
 def home_redirect():
     return redirect("/") 
+
+@app.route('/precip')
+def get_precip():
+    data = query_precip()
+    return data
+
+def query_precip(units='in'):
+    start = get_date_from_utc(get_date_from_days(3)).strftime('%Y-%m-%d')
+    end = get_date_from_utc(get_date_from_days(0)).strftime('%Y-%m-%d')
+
+    try:
+        print(PRECIP_API_URL.format(start, end, AGRO_KEY))
+        data = requests.get(PRECIP_API_URL.format(start, end, AGRO_KEY)).json()
+    except Exception as exc:    
+        print(exc)
+        data = None
+
+    total_precip = 0
+
+    for day in data['data']:
+        total_precip += day['precip']
+    
+    if units == 'in':
+        return total_precip / 25.4
 
 def query_api_historical(days_ago):
     """submit the API query using variables for days and API_KEY"""
